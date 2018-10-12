@@ -77,6 +77,11 @@ module StrongMigrations
             raise_error :change_column_null
           end
         end
+
+        protected_tables = StrongMigrations.protected_tables || []
+        if protected_tables.include?(args[0].to_s)
+          raise_error :protected_tables
+        end
       end
 
       result = super

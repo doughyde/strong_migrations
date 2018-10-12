@@ -8,10 +8,11 @@ require "strong_migrations/version"
 
 module StrongMigrations
   class << self
-    attr_accessor :auto_analyze, :start_after, :error_messages
+    attr_accessor :auto_analyze, :start_after, :protected_tables, :error_messages
   end
   self.auto_analyze = false
   self.start_after = 0
+  self.protected_tables = []
   self.error_messages = {
     add_column_default:
 "Adding a column with a non-null default causes
@@ -130,7 +131,10 @@ you're doing is safe before proceeding, then wrap it in a safety_assured { ... }
 This runs a single UPDATE query, which can cause downtime.
 Backfill NULLs manually in batches instead.
 
-More info: https://github.com/ankane/strong_migrations#backfilling-data"
+More info: https://github.com/ankane/strong_migrations#backfilling-data",
+    protected_tables:
+"This table is a protected table. Please make really sure that what
+you're doing is safe before proceeding, then wrap it in a safety_assured { ... } block."
   }
 end
 

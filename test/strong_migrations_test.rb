@@ -171,6 +171,17 @@ class VersionUnsafe < TestMigration
   end
 end
 
+class ProtectedTable < TestMigration
+  def change
+    StrongMigrations.protected_tables = ["users_protected"]
+    create_table "users_protected" do |t|
+      t.string :name
+    end
+
+    add_column :users_protected, :foo, :boolean
+  end
+end
+
 class StrongMigrationsTest < Minitest::Test
   def test_add_index
     skip unless postgres?
@@ -288,6 +299,10 @@ class StrongMigrationsTest < Minitest::Test
   def test_down
     assert_safe SafeUp
     assert_safe SafeUp, direction: :down
+  end
+
+  def test_protected_table
+    assert_unsafe ProtectedTable
   end
 
   def assert_unsafe(migration, message = nil)
